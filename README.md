@@ -1,0 +1,1 @@
+Get Binance API Credential from https://www.binance.com/en/my/settings/api-management
