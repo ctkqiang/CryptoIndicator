@@ -1,4 +1,5 @@
 import LBinance from "./services/LBinance.js";
+import cron from "node-cron";
 
 class Application {
   constructor() {
@@ -8,6 +9,13 @@ class Application {
   async run() {
     await this.binance.instance();
     await this.binance.getPrice();
+
+    cron.schedule("* * * * *", async () => {
+      console.log("******************************");
+      await this.binance.getPrice();
+    });
+
+    // TODO add cron push notification to services
   }
 }
 

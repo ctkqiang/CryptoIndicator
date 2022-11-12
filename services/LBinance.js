@@ -1,6 +1,5 @@
 import Binance from "node-binance-api";
 import environments from "../constant/Configuration.js";
-import Table from "cli-table";
 
 export default class LBinance {
   constructor() {
@@ -18,7 +17,7 @@ export default class LBinance {
     const value = await this.client.futuresPrices();
     const now = new Date().toISOString();
 
-    console.info(`Binance Crypto Future Price @[${now}]`);
+    console.info(`\n\nBinance Crypto Future Price @[${now}]`);
     console.table(value);
   }
 }
