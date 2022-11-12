@@ -17,7 +17,26 @@ export default class LBinance {
     const value = await this.client.futuresPrices();
     const now = new Date().toISOString();
 
-    console.info(`\n\nBinance Crypto Future Price @[${now}]`);
+    console.info(
+      "\x1b[33m%s\x1b[0m'",
+      `\n\nBinance Crypto Future Price @[${now}]`
+    );
+
     console.table(value);
+  }
+
+  async getSpecificPrice(symbol) {
+    const value = await this.client.futuresPrices();
+
+    console.log(
+      "\x1b[33m%s\x1b[0m",
+      `* The Price of [${symbol}]: ${value[symbol]}  `
+    );
+  }
+
+  async getSymbolsList() {
+    const value = await this.client.futuresPrices();
+
+    return Object.keys(value);
   }
 }

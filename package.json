@@ -5,22 +5,39 @@
   "type": "module",
   "main": "App.js",
   "scripts": {
-    "start": "nodemon ./app.js",
-    "test": "npm test"
+    "start": "node ./app.js",
+    "test": "npm test",
+    "build": "mkdir -p es5/bin && babel App.js --out-file es5/bin/price",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
     "url": "'"
   },
+  "bin": {
+    "price": "bin/price"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "cli",
+    "cryptoindicator"
+  ],
   "author": "John Melody Me",
   "license": "MIT",
   "dependencies": {
     "axios": "^1.1.3",
     "binance-api-node": "^0.12.0",
     "dotenv": "^16.0.3",
+    "esm": "^3.2.25",
+    "inquirer": "^9.1.4",
+    "is-iojs": "^1.1.0",
     "node-binance-api": "^0.13.1",
     "node-cron": "^3.0.2",
-    "nodemon": "^2.0.20",
     "sqlite3": "^5.1.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0"
   }
 }
