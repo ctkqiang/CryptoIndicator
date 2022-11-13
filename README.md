@@ -55,12 +55,6 @@ npm install
 npm start
 ```
 
-or
-
-```
-node ./App.js
-```
-
 #### Integration
 
 1. Telegram
