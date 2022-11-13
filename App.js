@@ -5,6 +5,7 @@ import inquirer from "inquirer";
 class Application {
   constructor() {
     this.binance = new LBinance();
+    this.choices = ["Yes", "No"];
     this.menu = [
       "I want to know the price of a cryptocurrency",
       "I want to know the price of all cryptocurrency",
@@ -17,6 +18,8 @@ class Application {
   }
 
   async run() {
+    await this.binance.instance();
+
     const listOfSymbols = await this.binance.getSymbolsList();
 
     const arguements = await inquirer.prompt([

@@ -1,15 +1,19 @@
 import Binance from "node-binance-api";
 import environments from "../constant/Configuration.js";
+import Connectivity from "./Connectivity.js";
 
 export default class LBinance {
   constructor() {
+    this.connectivity = new Connectivity();
     this.client = new Binance().options({
       APIKEY: environments.apiKey,
       APISECRET: environments.apiSecret,
     });
+    this.connectivity.setBanner();
   }
 
   async instance() {
+    await this.connectivity.getStatus();
     return await this.client;
   }
 
