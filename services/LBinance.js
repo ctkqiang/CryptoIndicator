@@ -12,23 +12,42 @@ export default class LBinance {
     this.connectivity.setBanner();
   }
 
+  /**
+   *
+   */
   async instance() {
     await this.connectivity.getStatus();
     return await this.client;
   }
 
-  async getPrice() {
+  /**
+   * Get the current price of all available cryptocurrencies into a table
+   * which will display to the console.
+   *
+   * @param {boolean} message: Default setted to `false`, expect to log
+   * the `value` to console. When the variable is set to `true`, the `value`
+   * will not be logged, instead it @returns {object} of the `value`.
+   */
+  async getPrice(isMessage = false) {
     const value = await this.client.futuresPrices();
     const now = new Date().toISOString();
 
-    console.info(
-      "\x1b[33m%s\x1b[0m'",
-      `\n\nBinance Crypto Future Price @[${now}]`
-    );
+    if (isMessage == false) {
+      console.info(
+        "\x1b[33m%s\x1b[0m'",
+        `\n\nBinance Crypto Future Price @[${now}]`
+      );
 
-    console.table(value);
+      console.table(value);
+    }
+
+    return JSON.stringify(value);
   }
 
+  /**
+   * @param {string} symbol: A string value required when the method called for
+   * returning @returns {number} from the property assigned to the requested key.
+   */
   async getSpecificPrice(symbol) {
     const value = await this.client.futuresPrices();
 
@@ -36,8 +55,13 @@ export default class LBinance {
       "\x1b[33m%s\x1b[0m",
       `* The Price of [${symbol}]: ${value[symbol]}  `
     );
+
+    return value[symbol];
   }
 
+  /**
+   *
+   */
   async getSymbolsList() {
     const value = await this.client.futuresPrices();
 

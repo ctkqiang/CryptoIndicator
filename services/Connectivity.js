@@ -23,7 +23,7 @@ export default class Connectivity {
   }
 
   setBanner() {
-    const message = " BINANCE CRYPTO PRICE INDICATOR";
+    const message = "CRYPTO PRICE INDICATOR";
     const author = "\tBY JOHN MELODY ME ";
 
     figlet(message, function (err, data) {

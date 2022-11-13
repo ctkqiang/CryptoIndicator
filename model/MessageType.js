@@ -1,9 +1,9 @@
 const messageType = Object.freeze({
-  Telegram: "telegram",
-  Viber: "viber",
-  Discord: "discord",
-  WhatsApp: "whatsapp",
-  Email: "email",
+  Telegram: "Telegram",
+  Viber: "Viber",
+  Discord: "Discord",
+  WhatsApp: "WhatsApp",
+  Email: "Email",
 });
 
 export default messageType;
