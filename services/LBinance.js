@@ -60,7 +60,7 @@ export default class LBinance {
   }
 
   /**
-   *
+   * @returns {object} list of Strings of available cryptocurrencies' symbols.
    */
   async getSymbolsList() {
     const value = await this.client.futuresPrices();

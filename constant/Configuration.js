@@ -9,6 +9,11 @@ const environments = {
   telegramToken: process.env.TELEGRAM_TOKEN,
   appName: process.env.DISCORD_WEBHOOK_APP_NAME,
   discrodWebhookURL: process.env.DISCORD_WEBHOOK_URL,
+  whatsAppToken: process.env.GREEN_API_TOKEN,
+  greenIdInstance: process.env.GREEN_ID_INSTANCE,
+  gmailAddress: process.env.GMAIL_ADDRESS,
+  gmailPassword: process.env.GMAIL_PASSWORD,
+  newsApi: process.env.NEWS_API,
 };
 
 export default environments;

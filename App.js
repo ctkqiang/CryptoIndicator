@@ -30,6 +30,10 @@ import cron from "node-cron";
 import inquirer from "inquirer";
 import Message from "./services/Message.js";
 import messageType from "./model/MessageType.js";
+import NewsAPI from "newsapi";
+import environments from "./constant/Configuration.js";
+import News from "./model/News.js";
+import Table from "cli-table";
 
 class Application {
   /**
@@ -37,10 +41,10 @@ class Application {
    */
   constructor() {
     this.binance = new LBinance();
+    this.newsapi = new NewsAPI(environments.newsApi);
     this.choices = ["Yes", "No"];
     this.channel = [
       messageType.Telegram,
-      messageType.Viber,
       messageType.Discord,
       messageType.WhatsApp,
       messageType.Email,
@@ -91,6 +95,11 @@ class Application {
 
     switch (arguements["crypto"]) {
       case this.menu[0]:
+        /**
+         * @variable symbols the user selected `listOfSymbols` which
+         * enable further decision making of returning or executing
+         * specific logic based method.
+         */
         const symbols = await inquirer.prompt([
           {
             type: "list",
@@ -106,6 +115,11 @@ class Application {
         await this.binance.getPrice();
         break;
       case this.menu[2]:
+        /**
+         * @variable lsymbols the user selected `listOfSymbols` which
+         * enable further decision making of returning or executing
+         * specific logic based method.
+         */
         const lsymbols = await inquirer.prompt([
           {
             type: "list",
@@ -115,24 +129,59 @@ class Application {
           },
         ]);
 
-        const response = await this.binance.getSpecificPrice(lsymbols["label"]);
-
+        /**
+         * Cron running 15 minutes schedule, log to console of the specific
+         * symbol's price to the console.
+         */
         cron.schedule("15 * * * * * *", async () => {
+          const response = await this.binance.getSpecificPrice(
+            lsymbols["label"]
+          );
+
           console.log("\x1b[31m%s\x1b[0m", "*".repeat(50));
 
           await response;
         });
         break;
       case this.menu[3]:
+        /**
+         * Cron running 15 minutes schedule, log to console of the all
+         * price to the console.
+         */
         cron.schedule("15 * * * * * *", async () => {
           console.log("\x1b[31m%s\x1b[0m", "*".repeat(50));
           await this.binance.getPrice();
         });
         break;
       case this.menu[4]:
+        /** NewsApi configuration, @return {Object} news object */
+        const news = await this.newsapi.v2.everything({
+          q: "crypto",
+          language: "en",
+          sortBy: "relevancy",
+          page: 2,
+        });
+
+        for (var i = 0; i < news["articles"].length; i++) {
+          var cryptoNews = new News(
+            news["articles"][i]["author"],
+            news["articles"][i]["title"],
+            news["articles"][i]["description"],
+            news["articles"][i]["url"],
+            news["articles"][i]["content"]
+          );
+
+          console.log("\x1b[33m%s\x1b[0m", cryptoNews);
+        }
+
         break;
 
       case this.menu[5]:
+        /**
+         * Cron running 15 minutes schedule, log to console of the specific
+         * symbol's price to the console and send it to the user via the
+         * `MessageType`.
+         */
         const ksymbols = await inquirer.prompt([
           {
             type: "list",
@@ -160,6 +209,11 @@ class Application {
         request.send(`The Price of [${ksymbols["label"]}]: ${kresponse}`);
         break;
       case this.menu[6]:
+        /**
+         * Cron running 15 minutes schedule, log to console of the all
+         * price to the console and send it to the user via the
+         * `MessageType`.
+         */
         const prices = await this.binance.getPrice(true);
         const kmessagetype = await inquirer.prompt([
           {
@@ -175,12 +229,11 @@ class Application {
         krequest.send(prices);
         break;
       case "Exit":
-      default:
+      default: {
         process.exit();
         break;
+      }
     }
-
-    // TODO add cron push notification to services
 
     return;
   }

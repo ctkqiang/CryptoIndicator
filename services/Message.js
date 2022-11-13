@@ -1,5 +1,6 @@
 import axios from "axios";
 import messageType from "../model/MessageType.js";
+import nodemailer from "nodemailer";
 import environments from "../constant/Configuration.js";
 import XMLHttpRequest from "xhr2";
 
@@ -7,6 +8,7 @@ export default class Message {
   constructor(messageType) {
     this.messageType = messageType;
     this.telegramToken = environments.telegramToken;
+    this.whatsApp = `https://api.green-api.com/waInstance${environments.greenIdInstance}/SendMessage/${environments.whatsAppToken}`;
   }
 
   async sendDiscord(message) {
@@ -48,9 +50,49 @@ export default class Message {
         request.open("GET", url);
         request.send();
         break;
-      case messageType.Viber:
       case messageType.WhatsApp:
+        /**
+         * @see {@link https://green-api.com/en/docs/api/sending/SendMessage/}
+         */
+        const parameters = {
+          chatId: "79001234567@c.us",
+          message: message,
+        };
+
+        axios({
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          data: JSON.stringify(parameters),
+          url: this.whatsApp,
+        }).then((result) => {
+          console.info("Sent!");
+        });
+        break;
       case messageType.Email:
+        /**  Email configuration */
+        const transporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            user: environments.gmailAddress,
+            pass: environments.gmailPassword,
+          },
+        });
+
+        const mailOptions = {
+          from: environments.gmailAddress,
+          to: environments.gmailAddress,
+          subject: "The details you asked for",
+          text: message,
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) console.error(error);
+
+          console.log("Sent!");
+        });
+        break;
       case messageType.Discord:
         await this.sendDiscord(message);
         break;
