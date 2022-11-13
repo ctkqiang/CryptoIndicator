@@ -32,6 +32,9 @@ import Message from "./services/Message.js";
 import messageType from "./model/MessageType.js";
 
 class Application {
+  /**
+   * @constructor {Application}
+   */
   constructor() {
     this.binance = new LBinance();
     this.choices = ["Yes", "No"];
@@ -52,18 +55,36 @@ class Application {
       "I want to get the price of all cryptocurrency sent to me",
       "Exit",
     ];
+    this.msg = [
+      "What is the crypto symbol you want to know the price from?",
+      "Where do you want me to send the details to?",
+      "How can I help you today?",
+    ];
   }
 
+  /** Method for executing compilation of every components. */
   async run() {
+    /**
+     *  @variable listOfSymbols gets the lists of every available
+     * symbol of the cryptocurrency.
+     */
     const listOfSymbols = await this.binance.getSymbolsList();
 
+    /**
+     * Initiate binance instances.
+     */
     await this.binance.instance();
 
+    /**
+     * @variable arguements gets the user selected `menu` which
+     * enable further decision making of returning or executing
+     * specific logic based method.
+     */
     const arguements = await inquirer.prompt([
       {
         type: "list",
         name: "crypto",
-        message: "How can I help you today?",
+        message: this.msg[2],
         choices: this.menu,
       },
     ]);
@@ -74,8 +95,7 @@ class Application {
           {
             type: "list",
             name: "label",
-            message:
-              "What is the crypto symbol you want to know the price from?",
+            message: this.msg[0],
             choices: listOfSymbols,
           },
         ]);
@@ -90,8 +110,7 @@ class Application {
           {
             type: "list",
             name: "label",
-            message:
-              "What is the crypto symbol you want to know the price from?",
+            message: this.msg[0],
             choices: listOfSymbols,
           },
         ]);
@@ -111,7 +130,6 @@ class Application {
         });
         break;
       case this.menu[4]:
-        console.log("s");
         break;
 
       case this.menu[5]:
@@ -119,8 +137,7 @@ class Application {
           {
             type: "list",
             name: "label",
-            message:
-              "What is the crypto symbol you want to know the price from?",
+            message: this.msg[0],
             choices: listOfSymbols,
           },
         ]);
@@ -133,7 +150,7 @@ class Application {
           {
             type: "list",
             name: "channel",
-            message: "Where do you want me to send the details to?",
+            message: this.msg[1],
             choices: this.channel,
           },
         ]);
@@ -148,7 +165,7 @@ class Application {
           {
             type: "list",
             name: "channel",
-            message: "Where do you want me to send the details to?",
+            message: this.msg[1],
             choices: this.channel,
           },
         ]);

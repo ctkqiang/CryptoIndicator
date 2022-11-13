@@ -5,7 +5,7 @@
   "type": "module",
   "main": "App.js",
   "scripts": {
-    "start": "node ./app.js",
+    "start": "node ./App.js",
     "test": "npm test",
     "build": "mkdir -p es5/bin && babel App.js --out-file es5/bin/price",
     "prepublish": "npm run build"
