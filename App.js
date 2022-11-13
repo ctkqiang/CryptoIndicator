@@ -1,11 +1,15 @@
 import LBinance from "./services/LBinance.js";
 import cron from "node-cron";
 import inquirer from "inquirer";
+import Message from "./services/Message.js";
+import messageType from "./model/MessageType.js";
 
 class Application {
   constructor() {
     this.binance = new LBinance();
+    this.message = new Message(messageType.Telegram);
     this.choices = ["Yes", "No"];
+
     this.menu = [
       "I want to know the price of a cryptocurrency",
       "I want to know the price of all cryptocurrency",
@@ -19,6 +23,8 @@ class Application {
 
   async run() {
     await this.binance.instance();
+
+    // await this.message.send("s");
 
     const listOfSymbols = await this.binance.getSymbolsList();
 
