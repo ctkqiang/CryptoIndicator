@@ -55,5 +55,5 @@ then add the bot to your group.
     <a href="https://shop.ledger.com/?r=a240cf0a4c37">
         <img src="https://cdn.shopify.com/s/files/1/2974/4858/t/278/assets/ledger-logo-long.svg?v=6450977357190936701666875522"  width="450" height="150">
     </a>
-    <img src="./assets/donation.JPG"  width="600" height="1200">
+    <img src="./assets/donation.JPG"  width="450" height="650">
 </div>
