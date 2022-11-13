@@ -40,7 +40,7 @@ node ./App.js
 1. Telegram
 
 Create Bot for your group.
-![Create Telegram Bot](./assets/createbot%20.gif)
+![Create Telegram Bot](./assets/createbot.gif)
 
 then add the bot to your group.
 ![Add Bot To Group](./assets/addbottogroup.gif)
