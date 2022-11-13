@@ -17,8 +17,6 @@ TELEGRAM_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 Visit https://www.binance.com/
 ![binance-api](./assets//binanceapi.png)
 
-### Where to get the Telegram Token?
-
 #### Installation
 
 ```
