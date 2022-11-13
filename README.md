@@ -26,6 +26,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
+#### Screenshot
+
+![screenshot](./assets//demo.png)
+
+#### Demo
+
+![demo](./assets/demo.gif)
+
 #### Configuration
 
 In order for this application to work, you required to setup an environment.
@@ -49,6 +57,18 @@ NEWS_API=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 Visit https://www.binance.com/
 ![binance-api](./assets//binanceapi.png)
+
+#### Where to get Discord Webhook Url?
+
+![discord](./assets//discord.gif)
+
+#### Where to get Green API?
+
+Visit https://green-api.com
+
+#### Where to get NewsAPI?
+
+Visit http://newsApi.org
 
 #### Installation
 
