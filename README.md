@@ -1,5 +1,24 @@
 ## Crypto Price Indicator
 
+#### Configuration
+
+In order for this application to work, you required to setup an environment.
+Create a file named `.env`, with the variables ar follow:
+
+```
+BINANCE_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+BINANCE_API_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+TELEGRAM_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+```
+
+#### Where to get the APIKEY amd API SECRET?
+
+Visit https://www.binance.com/
+![binance-api](./assets//binanceapi.png)
+
+### Where to get the Telegram Token?
+
 #### Installation
 
 ```
@@ -17,10 +36,6 @@ or
 ```
 node ./App.js
 ```
-
-#### Where to get the APIKEY amd API SECRET?
-
-Visit https://www.binance.com/
 
 #### Integration
 
