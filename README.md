@@ -2,11 +2,21 @@
 
 #### Installation
 
-`npm install`
+```
+npm install
+```
 
 #### Execution
 
-`npm start`
+```
+npm start
+```
+
+or
+
+```
+node ./App.js
+```
 
 #### Where to get the APIKEY amd API SECRET?
 
