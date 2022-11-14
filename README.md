@@ -82,6 +82,12 @@ npm install
 npm start
 ```
 
+#### Testing
+
+```
+npm test
+```
+
 #### Integration
 
 1. Telegram
