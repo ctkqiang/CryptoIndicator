@@ -3,20 +3,26 @@ import environments from "../constant/Configuration.js";
 import Connectivity from "./Connectivity.js";
 
 export default class LBinance {
-  constructor() {
-    this.connectivity = new Connectivity();
+  constructor(banner = true) {
+    this.banner = banner;
     this.client = new Binance().options({
       APIKEY: environments.apiKey,
       APISECRET: environments.apiSecret,
     });
-    this.connectivity.setBanner();
+
+    if (this.banner) {
+      this.connectivity = new Connectivity();
+      this.connectivity.setBanner();
+    }
   }
 
   /**
    *
    */
   async instance() {
-    await this.connectivity.getStatus();
+    if (this.banner) {
+      await this.connectivity.getStatus();
+    }
     return await this.client;
   }
 
@@ -48,13 +54,14 @@ export default class LBinance {
    * @param {string} symbol: A string value required when the method called for
    * returning @returns {number} from the property assigned to the requested key.
    */
-  async getSpecificPrice(symbol) {
+  async getSpecificPrice(symbol, print = true) {
     const value = await this.client.futuresPrices();
-
-    console.log(
-      "\x1b[33m%s\x1b[0m",
-      `* The Price of [${symbol}]: ${value[symbol]}  `
-    );
+    if (print) {
+      console.log(
+        "\x1b[33m%s\x1b[0m",
+        `* The Price of [${symbol}]: ${value[symbol]}  `
+      );
+    }
 
     return value[symbol];
   }

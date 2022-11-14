@@ -2,11 +2,9 @@ import http from "http";
 import https from "https";
 import figlet from "figlet";
 export default class Connectivity {
-  getStatus() {
-    return new Promise((resolve, reject) => {
-      https.get("https://www.google.com", function (res) {
-        resolve(res.statusCode === 200);
-
+  getStatus(print = true) {
+    https.get("https://www.binance.com/en", function (res) {
+      if (print == true) {
         if (res.statusCode == 200) {
           console.info(
             "\x1b[33m%s\x1b[0m",
@@ -18,7 +16,9 @@ export default class Connectivity {
             `\n\n[${res.statusCode}] The Binance services are not working  \n`
           );
         }
-      });
+      }
+
+      return res.statusCode;
     });
   }
 

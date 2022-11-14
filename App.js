@@ -25,15 +25,14 @@
  * @see {@link https://github.com/johnmelodyme/CryptoIndicator.git}
  * @since 1.0.0
  */
+import fs from "fs";
 import LBinance from "./services/LBinance.js";
 import cron from "node-cron";
 import inquirer from "inquirer";
 import Message from "./services/Message.js";
 import messageType from "./model/MessageType.js";
-import NewsAPI from "newsapi";
 import environments from "./constant/Configuration.js";
-import News from "./model/News.js";
-import Table from "cli-table";
+import News from "./services/News.js";
 
 class Application {
   /**
@@ -41,7 +40,8 @@ class Application {
    */
   constructor() {
     this.binance = new LBinance();
-    this.newsapi = new NewsAPI(environments.newsApi);
+    this.news = new News();
+    this.filePath = ".env";
     this.choices = ["Yes", "No"];
     this.channel = [
       messageType.Telegram,
@@ -69,173 +69,168 @@ class Application {
   /** Method for executing compilation of every components. */
   async run() {
     /**
-     *  @variable listOfSymbols gets the lists of every available
-     * symbol of the cryptocurrency.
+     * Inspect is filePath existed before executing the application.
      */
-    const listOfSymbols = await this.binance.getSymbolsList();
+    if (!fs.existsSync(this.filePath)) {
+      console.error(
+        "\x1b[31m",
+        "Please create an .env file. Refer to https://github.com/johnmelodyme/CryptoIndicator/blob/main/README.md"
+      );
+      process.exit(0);
+    } else {
+      /**
+       *  @variable listOfSymbols gets the lists of every available
+       * symbol of the cryptocurrency.
+       */
+      const listOfSymbols = await this.binance.getSymbolsList();
 
-    /**
-     * Initiate binance instances.
-     */
-    await this.binance.instance();
+      /**
+       * Initiate binance instances.
+       */
+      await this.binance.instance();
 
-    /**
-     * @variable arguements gets the user selected `menu` which
-     * enable further decision making of returning or executing
-     * specific logic based method.
-     */
-    const arguements = await inquirer.prompt([
-      {
-        type: "list",
-        name: "crypto",
-        message: this.msg[2],
-        choices: this.menu,
-      },
-    ]);
+      /**
+       * @variable arguements gets the user selected `menu` which
+       * enable further decision making of returning or executing
+       * specific logic based method.
+       */
+      const arguements = await inquirer.prompt([
+        {
+          type: "list",
+          name: "crypto",
+          message: this.msg[2],
+          choices: this.menu,
+        },
+      ]);
 
-    switch (arguements["crypto"]) {
-      case this.menu[0]:
-        /**
-         * @variable symbols the user selected `listOfSymbols` which
-         * enable further decision making of returning or executing
-         * specific logic based method.
-         */
-        const symbols = await inquirer.prompt([
-          {
-            type: "list",
-            name: "label",
-            message: this.msg[0],
-            choices: listOfSymbols,
-          },
-        ]);
+      switch (arguements["crypto"]) {
+        case this.menu[0]:
+          /**
+           * @variable symbols the user selected `listOfSymbols` which
+           * enable further decision making of returning or executing
+           * specific logic based method.
+           */
+          const symbols = await inquirer.prompt([
+            {
+              type: "list",
+              name: "label",
+              message: this.msg[0],
+              choices: listOfSymbols,
+            },
+          ]);
 
-        await this.binance.getSpecificPrice(symbols["label"]);
-        break;
-      case this.menu[1]:
-        await this.binance.getPrice();
-        break;
-      case this.menu[2]:
-        /**
-         * @variable lsymbols the user selected `listOfSymbols` which
-         * enable further decision making of returning or executing
-         * specific logic based method.
-         */
-        const lsymbols = await inquirer.prompt([
-          {
-            type: "list",
-            name: "label",
-            message: this.msg[0],
-            choices: listOfSymbols,
-          },
-        ]);
+          await this.binance.getSpecificPrice(symbols["label"]);
+          break;
 
-        /**
-         * Cron running 15 minutes schedule, log to console of the specific
-         * symbol's price to the console.
-         */
-        cron.schedule("15 * * * * * *", async () => {
-          const response = await this.binance.getSpecificPrice(
-            lsymbols["label"]
-          );
-
-          console.log("\x1b[31m%s\x1b[0m", "*".repeat(50));
-
-          await response;
-        });
-        break;
-      case this.menu[3]:
-        /**
-         * Cron running 15 minutes schedule, log to console of the all
-         * price to the console.
-         */
-        cron.schedule("15 * * * * * *", async () => {
-          console.log("\x1b[31m%s\x1b[0m", "*".repeat(50));
+        case this.menu[1]:
           await this.binance.getPrice();
-        });
-        break;
-      case this.menu[4]:
-        /** NewsApi configuration, @return {Object} news object */
-        const news = await this.newsapi.v2.everything({
-          q: "crypto",
-          language: "en",
-          sortBy: "relevancy",
-          page: 2,
-        });
+          break;
 
-        for (var i = 0; i < news["articles"].length; i++) {
-          var cryptoNews = new News(
-            news["articles"][i]["author"],
-            news["articles"][i]["title"],
-            news["articles"][i]["description"],
-            news["articles"][i]["url"],
-            news["articles"][i]["content"]
+        case this.menu[2]:
+          /**
+           * @variable lsymbols the user selected `listOfSymbols` which
+           * enable further decision making of returning or executing
+           * specific logic based method.
+           */
+          const lsymbols = await inquirer.prompt([
+            {
+              type: "list",
+              name: "label",
+              message: this.msg[0],
+              choices: listOfSymbols,
+            },
+          ]);
+
+          /**
+           * Cron running 15 minutes schedule, log to console of the specific
+           * symbol's price to the console.
+           */
+          cron.schedule("15 * * * * * *", async () => {
+            const response = await this.binance.getSpecificPrice(
+              lsymbols["label"]
+            );
+
+            console.log("\x1b[31m%s\x1b[0m", "*".repeat(50));
+
+            await response;
+          });
+          break;
+
+        case this.menu[3]:
+          /**
+           * Cron running 15 minutes schedule, log to console of the all
+           * price to the console.
+           */
+          cron.schedule("15 * * * * * *", async () => {
+            console.log("\x1b[31m%s\x1b[0m", "*".repeat(50));
+            await this.binance.getPrice();
+          });
+          break;
+
+        case this.menu[4]:
+          /** NewsApi configuration, @return {Object} news object */
+          await this.news.getNews();
+          break;
+
+        case this.menu[5]:
+          /**
+           * Cron running 15 minutes schedule, log to console of the specific
+           * symbol's price to the console and send it to the user via the
+           * `MessageType`.
+           */
+          const ksymbols = await inquirer.prompt([
+            {
+              type: "list",
+              name: "label",
+              message: this.msg[0],
+              choices: listOfSymbols,
+            },
+          ]);
+
+          const kresponse = await this.binance.getSpecificPrice(
+            ksymbols["label"]
           );
 
-          console.log("\x1b[33m%s\x1b[0m", cryptoNews);
+          const messagetype = await inquirer.prompt([
+            {
+              type: "list",
+              name: "channel",
+              message: this.msg[1],
+              choices: this.channel,
+            },
+          ]);
+
+          const request = new Message(messagetype["channel"]);
+
+          request.send(`The Price of [${ksymbols["label"]}]: ${kresponse}`);
+          break;
+        case this.menu[6]:
+          /**
+           * Cron running 15 minutes schedule, log to console of the all
+           * price to the console and send it to the user via the
+           * `MessageType`.
+           */
+          const prices = await this.binance.getPrice(true);
+          const kmessagetype = await inquirer.prompt([
+            {
+              type: "list",
+              name: "channel",
+              message: this.msg[1],
+              choices: this.channel,
+            },
+          ]);
+
+          const krequest = new Message(kmessagetype["channel"]);
+
+          krequest.send(prices);
+          break;
+        case "Exit":
+        default: {
+          process.exit();
+          break;
         }
-
-        break;
-
-      case this.menu[5]:
-        /**
-         * Cron running 15 minutes schedule, log to console of the specific
-         * symbol's price to the console and send it to the user via the
-         * `MessageType`.
-         */
-        const ksymbols = await inquirer.prompt([
-          {
-            type: "list",
-            name: "label",
-            message: this.msg[0],
-            choices: listOfSymbols,
-          },
-        ]);
-
-        const kresponse = await this.binance.getSpecificPrice(
-          ksymbols["label"]
-        );
-
-        const messagetype = await inquirer.prompt([
-          {
-            type: "list",
-            name: "channel",
-            message: this.msg[1],
-            choices: this.channel,
-          },
-        ]);
-
-        const request = new Message(messagetype["channel"]);
-
-        request.send(`The Price of [${ksymbols["label"]}]: ${kresponse}`);
-        break;
-      case this.menu[6]:
-        /**
-         * Cron running 15 minutes schedule, log to console of the all
-         * price to the console and send it to the user via the
-         * `MessageType`.
-         */
-        const prices = await this.binance.getPrice(true);
-        const kmessagetype = await inquirer.prompt([
-          {
-            type: "list",
-            name: "channel",
-            message: this.msg[1],
-            choices: this.channel,
-          },
-        ]);
-
-        const krequest = new Message(kmessagetype["channel"]);
-
-        krequest.send(prices);
-        break;
-      case "Exit":
-      default: {
-        process.exit();
-        break;
       }
     }
-
-    return;
   }
 }
 
